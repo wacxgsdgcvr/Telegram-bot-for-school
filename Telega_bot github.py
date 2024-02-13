@@ -1,29 +1,12 @@
 import telebot 
-import time 
-from datetime import datetime, time 
+from datetime import datetime, time
 from telebot import types
-import ctypes
-import os
-from zipfile import ZipFile
 
-
-
-# try:  
-token = "5814626429:AAE9t86ApFjNLIP041RH9A1dL1S-YPRILjw"
+token = "your bot token"
 bot = telebot.TeleBot(token)
+
 # print(f'{message.from_user.first_name} написав: "{message.text}" о {now}')
 
-@bot.message_handler(regexp=r'https://vm.tiktok.com')
-def handle_tiktok_message(message):
-    print(f'{message.from_user.first_name} написав: "{message.text}" о {datetime.now().strftime("%H:%M")}')
-    bot.reply_to(message, "ахахаха")
-
-@bot.message_handler(commands=['info'])
-def get_user_text(message):
-    print(f'{message.from_user.first_name} написав: "{message.text}" о {datetime.now().strftime("%H:%M")}')
-    bot.send_message(message.chat.id, message) 
-
-rozk_dz = "30"
 lesson01 = time(8, 0)
 lesson0 = time(8, 24)
 lesson1 = time(9, 0)
@@ -34,40 +17,20 @@ lesson5 = time(12, 0)
 lesson6 = time(12, 40)
 lesson7 = time(13, 20)
 
-# rozk_dz = "norm"
-# lesson01 = time(8, 0)
-# lesson0 = time(8, 24)
-# lesson1 = time(9, 0)
-# lesson2 = time(9, 55)
-# lesson3 = time(10, 50)
-# lesson4 = time(11, 45)
-# lesson5 = time(13, 0)
-# lesson6 = time(13, 55)
-# lesson7 = time(14, 45)
-
+@bot.message_handler(commands=['info'])
+def get_user_text(message):
+    print(f'{message.from_user.first_name} написав: "{message.text}" о {datetime.now().strftime("%H:%M")}')
+    bot.send_message(message.chat.id, message)
 
 @bot.message_handler(commands=['start'])
 def start(message):
     print(f'{message.from_user.first_name} написав: "{message.text}", "{message.from_user.username}" о {datetime.now().strftime("%H:%M")}')
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton("📚який урок?")
-    # btn2 = types.KeyboardButton("📒Домашнє завдання")
-    # btn3 = types.KeyboardButton("🕐Розклад дзвінків")
-    markup.add(btn1)
-    bot.send_message(message.chat.id, text='Привіт. Я бот який допоможе тобі дізнатись який зараз урок. натисни на кнопку "Який урок?" або напишіть команду /help щоб побачипи всі команди цього  бота', reply_markup=markup)
 
-@bot.message_handler(commands=['help'])
-def help(message):
-    print(f'{message.from_user.first_name} написав: "{message.text}" о {datetime.now().strftime("%H:%M")}')
-    bot.send_message(message.chat.id, 
-'''
-/lesson - силки на всі уроки 
-/domahka - силка на всі домашні завдання
-/rk - уроки сьогодні
-/rozklad_dzvinkiv - розклід дзвінків
-/rozklad - розклад уроків на тиждень
-''')
-    
+    markup.add(btn1)
+    bot.send_message(message.chat.id, text='Привіт. Я - бот, який допоможе тобі дізнатись, який зараз урок. Натисни на кнопку ‘Який урок?’ або напишіть команду /help, щоб побачити всі команди цього бота.', reply_markup=markup)
+
 @bot.message_handler(commands=['rozklad'])
 def rozklad(message):
     print(f'{message.from_user.first_name} написав: "{message.text}", "{message.from_user.username}" о {datetime.now().strftime("%H:%M")}')
@@ -111,134 +74,6 @@ def rozklad(message):
 5) Фізична культура
 6) Основи правознавства
 ''')
-@bot.message_handler(regexp=(r'🕐Розклад дзвінків'))
-def rozklad_dz(message):
-    print(f'{message.from_user.first_name} написав: "{message.text}", "{message.from_user.username}" о {datetime.now().strftime("%H:%M")}')
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("📚який урок?")
-    btn2 = types.KeyboardButton("📒Домашнє завдання")
-    markup.add(btn1, btn2)
-
-    bot.send_message(message.chat.id,"я вирішив прибрати цю кнопку, користуйся цією функцією командою /rozklad_dzvainkiv або через кнопку Меню ", reply_markup=markup)
-    rozklad_dzvainkiv(message)
-
-# 8:30-9:15
-# 9:25-10:10
-# 10:20-11:05
-# 11:15-12:00
-# 12:30-13:15
-# 13:25-14:10
-# 14:15-15:00
-
-@bot.message_handler(commands=['rozklad_dzvainkiv'])
-def rozklad_dzvainkiv(message):
-    print(f'{message.from_user.first_name} написав: "{message.text}", "{message.from_user.username}" о {datetime.now().strftime("%H:%M")}')
-    time_now = datetime.now().time()
-    if lesson0 <= time_now < lesson1:
-        bot.send_message(message.chat.id,
-'''
-<em><b>1)8:30-9:15</b></em>
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML')            
-    elif lesson1 <= time_now < lesson2:
-        bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-<em><b>2)9:25-10:10</b></em>
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML') 
-    elif lesson2 <= time_now < lesson3:
-            bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-<em><b>3)10:20-11:05</b></em>
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML')
-    elif lesson3 <= time_now < lesson4:
-        bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-<em><b>4)11:15-12:00</b></em>
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML') 
-    elif lesson4 <= time_now < lesson5:
-        bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-<em><b>5)12:30-13:15</b></em>
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML')
-        
-    elif lesson5 <= time_now < lesson6:
-        bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-<em><b>6)12:00-12:30</b></em> 
-7)14:15-15:00''', parse_mode='html')
-    elif lesson6 <= time_now < lesson7:
-        bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-<em><b> 7)14:15-15:00</b></em> ''', parse_mode='html')
-    else:
-        bot.send_message(message.chat.id,
-'''
-1)08:30-09:00
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''')
-
-#    lessons = [
-#       "08:30-09:00", "09:10-09:40", "09:50-10:20", 
-#        "10:35-11:05", "11:20-11:50", "12:00-12:30", 
-#        "12:40-13:10"
-#    ]
-#    current_lesson = None
-#    for i, lesson in enumerate(lessons):
-#        start, end = lesson.split("-")
-#        start_time = datetime.strptime(start, "%H:%M").time()
-#        end_time = datetime.strptime(end, "%H:%M").time()
-#        if start_time <= now < end_time:
-#            current_lesson = i + 1
-#            break
-#   if current_lesson:
-#       reply = "\n".join(
-#         [f"<em><b>{i}){lessons[i]}</b></em>" if i + 1 == current_lesson else f"{i+1}){lessons[i]}"
-#          for i in range(len(lessons))
-#            ])
-#    else:
-#        reply = "\n".join([f"{i+1}){lessons[i]}" for i in range(len(lessons))])
-#    bot.send_message(message.chat.id, reply, parse_mode="HTML")
-
-global l1, l2, l3, l4, l5, l6, l7
 
 @bot.message_handler(commands=['rk'])
 def rk(message):
@@ -247,8 +82,6 @@ def rk(message):
 
     now = datetime.now()
     day_now = now.weekday()
-    time_now = now.time()
-
 
     l1 = "8:30-9:00"
     l2 = "9:10-9:40"
@@ -258,23 +91,23 @@ def rk(message):
     l6 = "12:10-12:40"
     l7 = "12:50-13:20"
 
-    ximia     = 'https://meet.google.com/fxh-qhcn-vkv?authuser=1'
-    fizra     = 'https://meet.google.com/trm-bykt-kqd?authuser=1'
-    geometria = 'https://meet.google.com/umh-cihs-czh?authuser=1'
-    algebra   = 'https://meet.google.com/xbx-fyzh-vxj?authuser=1'
-    biologia  = 'https://meet.google.com/aym-zvnh-its?authuser=1'
-    osnzd     = 'https://meet.google.com/ums-zrja-xag?authuser=1'
-    ykrlit    = 'https://meet.google.com/sbh-fkxx-mjo?authuser=1'
-    zaryba    = 'https://meet.google.com/ybx-zzjd-wmg?authuser=1'
-    vses_ist  = 'https://meet.google.com/zhs-mdvc-obq?authuser=1'
-    ist_ua    = 'https://meet.google.com/fgd-kqkc-xpr?authuser=1'
-    geografia = 'https://meet.google.com/sbg-chnp-eku?authuser=1'
-    nim_mova  = 'https://meet.google.com/ojy-mbxu-efo?authuser=1'
-    angl      = 'https://meet.google.com/ocd-sfmu-bqw?authuser=1'
-    fizika    = 'https://meet.google.com/dhb-xxhe-xdf?authuser=1'
-    myzlo     = 'https://meet.google.com/cvg-mshj-kdn?authuser=1'
-    ykr_mova  = 'https://meet.google.com/eoy-iojm-vea?authuser=1'
-    pravo     = 'https://meet.google.com/ugg-kgmv-tzu?authuser=1'
+    ximia     = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    fizra     = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    geometria = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    algebra   = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    biologia  = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    osnzd     = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    ykrlit    = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    zaryba    = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    vses_ist  = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    ist_ua    = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    geografia = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    nim_mova  = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    angl      = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    fizika    = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    myzlo     = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    ykr_mova  = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
+    pravo     = 'https://meet.google.com/aaa-aaaa-aaa?authuser=1'
 
     if day_now == 0:
         bot.send_message(message.chat.id,f'''   
@@ -323,38 +156,7 @@ def rk(message):
 4) Інформатика {l4}
 5) <a href =\"{fizra}\">Фізична культура</a> {l5}
 6) <a href =\"{pravo}\">Основи правознавства</a> {l6}''', parse_mode='HTML')
- 
-# домашка
-# @bot.message_handler(commands=['domahka'])
-# def domahka(message):
 
-#     print(f'{message.from_user.first_name} написав: "{message.text}" о {datetime.now().strftime("%H:%M")}')
-
-#     domahka = types.InlineKeyboardMarkup(row_width=1)
-
-#     uni_dosl = types.InlineKeyboardButton('Юні дослідники', url='https://classroom.google.com/u/1/w/NjAzNzcyMTI2ODU1/t/all?hl=ua')
-#     informatika_dz = types.InlineKeyboardButton('Інформатика', url='https://classroom.google.com/u/1/w/NTgwODg4MDQxMzcx/t/all?hl=ua')
-#     ximia_dz = (types.InlineKeyboardButton('Хімія', url='https://classroom.google.com/u/0/w/NTI3MDA2NDM5MzY3/t/all?hl=ua'))
-#     fizra_dz = types.InlineKeyboardButton('Фізична культура', url='https://classroom.google.com/u/0/w/NTQ1MzMyNTM5MDcz/t/all?hl=ua')
-#     geometria_dz = types.InlineKeyboardButton('Геометрія', url='https://classroom.google.com/u/0/w/NTQ0OTkxMzc5NTk0/t/all?hl=ua')
-#     algebra_dz = types.InlineKeyboardButton('Алгебра', url='https://classroom.google.com/u/1/w/NTQ0OTg5Nzg2OTI1/t/all?hl=ua')
-#     biologia_dz = (types.InlineKeyboardButton('Біологія', url='https://classroom.google.com/u/0/w/NTQ0OTg1OTA5NDE2/t/all?hl=ua'))
-#     osnzd_dz = (types.InlineKeyboardButton('Основи здоровя', url='https://classroom.google.com/u/0/w/NTQ0OTg0MzgxNjk1/t/all?hl=ua'))
-#     zaryba_dz = (types.InlineKeyboardButton('Зарубіжна література', url='https://classroom.google.com/u/0/w/NTQ0Nzk4MTgzMTU4/t/all?hl=ua'))
-#     vses_ist_dz = (types.InlineKeyboardButton('Всесвітня історія', url='https://classroom.google.com/u/0/w/NTc5MzA5Mjc3NzYz/t/all?hl=ua'))
-#     ist_ua_dz = (types.InlineKeyboardButton('Історія України', url='https://classroom.google.com/u/0/w/NTQ0MDQ5MzQ2MjYw/t/all?hl=ua'))
-#     geografia_dz = types.InlineKeyboardButton('Географія', url='https://classroom.google.com/u/1/w/NDIwNDA2MzI0MDg5/t/all?hl=ua')
-#     nim_mova_dz = (types.InlineKeyboardButton('Німецька мова', url='https://classroom.google.com/u/0/w/NDEyNzM5NTAyNDg5/t/all?hl=ua'))
-#     angl_dz = (types.InlineKeyboardButton('Англійська мова', url='https://classroom.google.com/u/0/w/MjI2NjczNzcyNDE1/t/all?hl=ua'))
-#     fizika_dz = types.InlineKeyboardButton('Фізика', url='https://classroom.google.com/u/1/w/Mzk4ODMwOTIxMjky/t/all?hl=ua')
-#     myzlo_dz = (types.InlineKeyboardButton('Музичне мистецтво', url='https://classroom.google.com/u/0/w/MTUxNDM3MTIyMTEx/t/all?hl=ua'))
-#     ykr_lit_dz = (types.InlineKeyboardButton('Українська література', url='https://classroom.google.com/u/0/w/MTk0OTc2OTI4NjMx/t/all?hl=ua'))
-#     ykr_mova_dz = types.InlineKeyboardButton('Українська мова', url='https://classroom.google.com/u/1/w/MTk0OTg3MzQ2Mzc4/t/all?hl=ua')
-#     trydove_dz = (types.InlineKeyboardButton('Трудове', url='https://classroom.google.com/u/0/w/NTQ1MzYzNzc2MjQw/t/all?hl=ua'))
-
-#     domahka.add(uni_dosl, informatika_dz, ximia_dz, fizra_dz, geometria_dz, algebra_dz, biologia_dz, osnzd_dz, zaryba_dz, vses_ist_dz, ist_ua_dz, geografia_dz, nim_mova_dz, angl_dz, fizika_dz, myzlo_dz, ykr_lit_dz, ykr_mova_dz, trydove_dz)
-    
-#     bot.send_message(message.chat.id, 'Домашні завдання:', reply_markup=domahka)
 
 # ДОМАШНЕ ЗАВДАНЯ
 @bot.message_handler(commands=['domahka'])
@@ -430,137 +232,6 @@ def dz (message):
     elif day_now == 3:
         bot.send_message(message.chat.id, 'Домашнє завдання на п\'ятницю', reply_markup=patnisa)
 
-# всі уроки одним сообщением
-# @bot.message_handler(commands=['lesson'])
-# def lesson(message):
-
-#     print(f'{message.from_user.first_name} написав: "{message.text}" о {datetime.now().strftime("%H:%M")}')
-
-#     lessons = types.InlineKeyboardMarkup(row_width=1)
-    
-#     informatika = (types.InlineKeyboardButton('Інформатика', url='https://meet.google.com/rwo-fnow-iwt?authuser=1&hs=179'))
-#     ximia = (types.InlineKeyboardButton('Хімія', url=''))
-#     fizra = (types.InlineKeyboardButton('Фізична культура', url='https://meet.google.com/trm-bykt-kqd?authuser=1&hs=179'))
-#     geometria = (types.InlineKeyboardButton('Геометрія', url=''))
-#     algebra = (types.InlineKeyboardButton('Алгебра', url='https://meet.google.com/xbx-fyzh-vxj?authuser=1&hs=179'))
-#     biologia = (types.InlineKeyboardButton('Біологія', url=''))
-#     osnzd = (types.InlineKeyboardButton("Основи здоров'я", url='https://meet.google.com/mgd-pvwi-rcr?authuser=1&hs=179 '))
-#     zaryba = (types.InlineKeyboardButton('Зарубіжна література', url=''))
-#     vses_ist = (types.InlineKeyboardButton('Всесвітня історія', url='https://meet.google.com/zhs-mdvc-obq?authuser=1&hs=179'))
-#     ist_ua = (types.InlineKeyboardButton('Історія України', url='https://meet.google.com/fgd-kqkc-xpr?authuser=1&hs=179'))
-#     geografia = (types.InlineKeyboardButton('Географія', url='https://meet.google.com/rwh-ncei-uxj?authuser=1&hs=179'))
-#     nim_mova = (types.InlineKeyboardButton('Німецька мова', url=''))
-#     angl = (types.InlineKeyboardButton('Англійська мова', url='https://meet.google.com/lookup/efvylqqrlu?authuser=1&hs=179'))
-#     fizika = (types.InlineKeyboardButton('Фізика', url='https://meet.google.com/dhb-xxhe-xdf?authuser=1&hs=179'))
-#     myzlo = (types.InlineKeyboardButton('Музика', url='https://meet.google.com/lookup/cb53s4wfa2?authuser=1&hs=179'))
-#     ykr_lit = (types.InlineKeyboardButton('Українська література', url='https://meet.google.com/sbh-fkxx-mjo?authuser=1&hs=179'))
-#     ykr_mova = (types.InlineKeyboardButton('Українська мова', url='https://meet.google.com/eoy-iojm-vea?authuser=1&hs=179'))
-#     trydove = (types.InlineKeyboardButton('Трудове навчання', url=''))
-#     prava = (types.InlineKeyboardButton('Трудове навчання', url='https://meet.google.com/ugg-kgmv-tzu?authuser=1&hs=179'))
-
-#     lessons.add(informatika, ximia, fizra, geometria, algebra, biologia, osnzd, zaryba, vses_ist, ist_ua, geografia, nim_mova, angl, fizika, myzlo, ykr_lit, ykr_mova, trydove, prava)
-    
-#     bot.send_message(message.chat.id, 'уроки:', reply_markup=lessons)
-
-@bot.message_handler(commands=['rozklad_dzvinkiv'])
-def rozklad_dzvinkiv(message):
-    print(f'{message.from_user.first_name} написав: "{message.text}", "{message.from_user.username}" о {datetime.now().strftime("%H:%M")}')
-    now = datetime.now()
-    time_now = now.time()
-    if rozk_dz == "norm":
-        if lesson0 <= time_now < lesson1:
-            bot.send_message(message.chat.id,
-'''
-<em><b>1)8:30-9:15</b></em>
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML')            
-        elif lesson1 <= time_now < lesson2:
-            bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-<em><b>2)9:25-10:10</b></em>
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML') 
-        elif lesson2 <= time_now < lesson3:
-                bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-<em><b>3)10:20-11:05</b></em>
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML')
-        elif lesson3 <= time_now < lesson4:
-            bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-<em><b>4)11:15-12:00</b></em>
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML') 
-        elif lesson4 <= time_now < lesson5:
-            bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-<em><b>5)12:30-13:15</b></em>
-6)13:25-14:10
-7)14:15-15:00''', parse_mode='HTML')    
-        elif lesson5 <= time_now < lesson6:
-            bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-<em><b>6)12:00-12:30</b></em> 
-7)14:15-15:00''', parse_mode='html')
-        elif lesson6 <= time_now < lesson7:
-            bot.send_message(message.chat.id,
-'''
-1)8:30-9:15
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-<em><b> 7)14:15-15:00</b></em> ''', parse_mode='html')
-        else:
-            bot.send_message(message.chat.id,
-'''
-1)08:30-09:00
-2)9:25-10:10
-3)10:20-11:05
-4)11:15-12:00
-5)12:30-13:15
-6)13:25-14:10
-7)14:15-15:00''')
-        
-    # 30 
-    elif rozk_dz == "30": 
-        bot.send_message(message.chat.id, """
-1) 8.30-9.00
-2) 9.10-9.40
-3) 9.50-10.20
-4) 10.35-11.05
-5) 11.20-11.50
-6) 12.00-12.30
-7) 12.40-13.10
-8) 13.20-13.50""")
-       
 
 @bot.message_handler(commands=['all_books'])
 def all_books(message):
@@ -568,17 +239,15 @@ def all_books(message):
     bot.send_message(message.chat.id, f"<a href=\"https://drive.google.com/drive/folders/1si0b1nROYKhQKp5Ime-WVnylc1xQXYiB?usp=drive_link\">👉Всі книги👈</a>", parse_mode="HTML")
 
 
-    
 @bot.message_handler(regexp=r"який урок")
 def func(message):
 
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("📚який урок?")
-    btn2 = types.KeyboardButton("📒Домашнє завдання")
-    markup.add(btn1, btn2)
-    
     print(f'{message.from_user.first_name} написав: "{message.text}", "{message.from_user.username}" о {datetime.now().strftime("%H:%M")}')
-    
+
+    now = datetime.now()
+    day_now = now.weekday()
+    time_now = now.time()
+
     osnzd = types.InlineKeyboardMarkup()
     ximia = types.InlineKeyboardMarkup()
     fizra = types.InlineKeyboardMarkup()
@@ -605,6 +274,7 @@ def func(message):
 
     cereda = types.InlineKeyboardMarkup(row_width=2)
 
+    # Посилання на google meet або щось інше
     ximia.add(types.InlineKeyboardButton('Урок',     url='https://meet.google.com/fxh-qhcn-vkv?authuser=1'))
     fizra.add(types.InlineKeyboardButton('Урок',     url='https://meet.google.com/trm-bykt-kqd?authuser=1'))
     geometria.add(types.InlineKeyboardButton('Урок', url='https://meet.google.com/umh-cihs-czh?authuser=1'))
@@ -638,17 +308,12 @@ def func(message):
     ist_ua1 = types.InlineKeyboardButton('Історія України', url='https://meet.google.com/fgd-kqkc-xpr?authuser=1&hs=179')
     geografia1 = types.InlineKeyboardButton('Географія', url='https://meet.google.com/sbg-chnp-eku?authuser=1&hs=179')
     cereda.add(ist_ua1, geografia1)
-    
-    #   .add(types.InlineKeyboardButton('Урок', url=''))
-    #   , reply_markup = trydove
-    
-    now = datetime.now()
-    day_now = now.weekday()
-    time_now = now.time()
+   
+   
 
-    # Посилання на домашні завдання
+    # yrok_dz = [посилання на classroom цього урока, назва урока, посилання на книгу]
     inf_books =      ['https://drive.google.com/file/d/1jrsW9nHN2lL7CYKJ-inNU2PwkX22Hvff/view?usp=drive_link', 'https://drive.google.com/file/d/10Ss8jfXnmRoIB_bAw6CjSg_FXFZDbcGl/view?usp=sharing']
-    informatika_dz = ['https://classroom.google.com', 'Інформатика', '1 група', 
+    informatika_dz = ['https://classroom.google.com', 'Інформатика', '1 група',
                       'https://classroom.google.com', '2 група']
     ximia_dz =       ['https://classroom.google.com/u/1/w/NjIwMzkwNTY4NDYy/t/all?hl=ua', 'Хімія', 'https://drive.google.com/file/d/1gTwU7K3uM0lADqyVicuq81bjEPQeoFzW/view?usp=sharing']
     fizra_dz =       ['https://classroom.google.com/u/1/w/NTQ1MzMyNTM5MDcz/t/all?hl=ua', 'Фізична культура']
@@ -785,31 +450,3 @@ bot.infinity_polling()
 
 
 
-
-
-
-# @bot.message_handler(func=lambda message: True)
-# def set_reminder_time(message):
-#     print(f'{message.from_user.first_name} написав: "{message.text}", "{message.from_user.username}" о {datetime.now().strftime("%H:%M")}')
-    
-
-#     chat_id = message.chat.id
-#     reminder_time = message.text
-#     try:
-#         reminder_datetime = datetime.strptime(reminder_time, '%H:%M')
-#         bot.send_message(chat_id, f"Нагадуваня встановлено на: {reminder_datetime.strftime('%H:%M')}.")
-#         while True:
-#             if datetime.now().strftime('%H:%M') == reminder_datetime.strftime('%H:%M'):
-#                 bot.send_message(chat_id, "УРОК!!!")
-#                 break
-#     except ValueError:
-#         bot.send_message(chat_id, "Щоб поставить нагадуваня потрібно написати час в форматі HH:MM тобто години:хвилини")
-#         bot.register_next_step_handler(message, set_reminder_time)
-
-
-
-# try:
-#     bot.infinity_polling()
-# except Exception as e:
-#     print(f'Error: {e}')
-#     bot.infinity_polling()
